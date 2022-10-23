@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include UserSessionsHelper
   def index
     @users=User.all
   end
@@ -11,30 +12,13 @@ class UsersController < ApplicationController
       #session[:user_id]=user.id
       log_in(user)
       flash[:notice]="ユーザー登録が完了しました"
-      redirect_to ("/login")
+      redirect_to ("/events/index")
     else
       render :new
     end
   end
   def show
     @user=User.find_by(id: params[:id])
-  end
-  def login_form
-  end
-  def login
-      user = User.find_by(email: params[:users][:email].downcase)
-      if user && user.authenticate(params[:users][:password])
-        log_in(user)
-        flash[:notice]="ログインしました。"
-        redirect_to("/posts/index")
-    else
-        redirect_to login_path
-    end
-  end
-  def logout
-    session[:user_id]= nil
-    flash[:notice]="ログアウトしました"
-    redirect_to("/login")
   end
   
 
